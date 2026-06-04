@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blindspot</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #fafafa;
+            color: #333;
+        }
+        h1 { color: #222; }
+        .description { color: #666; margin-bottom: 30px; }
+        form { background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #ddd; }
+        label { display: block; font-weight: 600; margin-top: 16px; margin-bottom: 6px; }
+        textarea {
+            width: 100%; min-height: 200px; padding: 12px;
+            border: 1px solid #ccc; border-radius: 4px; font-size: 14px;
+            font-family: inherit; resize: vertical; box-sizing: border-box;
+        }
+        select, input[type="number"] {
+            padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px;
+            font-size: 14px;
+        }
+        button {
+            margin-top: 20px; padding: 12px 32px; background: #2196F3; color: #fff;
+            border: none; border-radius: 4px; font-size: 16px; cursor: pointer;
+        }
+        button:hover { background: #1976D2; }
+        .error { color: #D32F2F; background: #FFEBEE; padding: 12px; border-radius: 4px; margin-bottom: 16px; }
+    </style>
+</head>
+<body>
+    <h1>blindspot</h1>
+    <p class="description">Write what you know about a topic. blindspot will find the gaps.</p>
+
+    {% if error %}
+    <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <form method="POST" action="/analyze">
+        <label for="topic">Topic</label>
+        <select name="topic" id="topic" required>
+            {% for ref in references %}
+            <option value="{{ ref }}">{{ ref }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="text">What do you know about this topic?</label>
+        <textarea name="text" id="text" placeholder="Write everything you know about the topic here. For example: Variables in Python store values. You can have integers, strings, and floats. Functions let you reuse code by defining parameters and return values..." required></textarea>
+
+        <label for="threshold">Similarity threshold</label>
+        <input type="number" name="threshold" id="threshold" value="0.75" min="0" max="1" step="0.05">
+
+        <br>
+        <button type="submit">Analyze</button>
+    </form>
+</body>
+</html>

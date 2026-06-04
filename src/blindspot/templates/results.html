@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>blindspot - Results</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            background: #fafafa;
+            color: #333;
+        }
+        h1 a { color: #222; text-decoration: none; }
+        h1 a:hover { color: #2196F3; }
+        .coverage-bar {
+            background: #eee; border-radius: 8px; height: 24px;
+            margin: 16px 0; overflow: hidden;
+        }
+        .coverage-fill {
+            height: 100%; border-radius: 8px;
+            transition: width 0.5s ease;
+        }
+        .report { background: #fff; padding: 30px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 24px; }
+        .graph-container { background: #fff; border-radius: 8px; border: 1px solid #ddd; overflow: hidden; }
+        .graph-container iframe { width: 100%; height: 620px; border: none; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #2196F3; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        ul, ol { padding-left: 24px; }
+        li { margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+    <h1><a href="/">blindspot</a></h1>
+    <a href="/" class="back-link">New analysis</a>
+
+    <div class="coverage-bar">
+        {% set pct = (coverage * 100) | int %}
+        {% if pct >= 70 %}
+            {% set bar_color = "#4CAF50" %}
+        {% elif pct >= 40 %}
+            {% set bar_color = "#FFC107" %}
+        {% else %}
+            {% set bar_color = "#F44336" %}
+        {% endif %}
+        <div class="coverage-fill" style="width: {{ pct }}%; background: {{ bar_color }};"></div>
+    </div>
+
+    <div class="report">
+        {{ report_html | safe }}
+    </div>
+
+    {% if graph_html %}
+    <h3>Concept Graph</h3>
+    <p>Green = covered, Red = missing, Yellow = mentioned but disconnected</p>
+    <div class="graph-container">
+        <iframe srcdoc="{{ graph_html | e }}"></iframe>
+    </div>
+    {% endif %}
+</body>
+</html>
