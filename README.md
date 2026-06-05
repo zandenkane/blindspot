@@ -1,6 +1,12 @@
-# blindspot
+<p align="center">
+  <img src="assets/banner.png" alt="blindspot" width="100%">
+</p>
 
-![CI](https://github.com/zandenkane/blindspot/actions/workflows/ci.yml/badge.svg)
+<p align="center">
+  <a href="https://github.com/zandenkane/blindspot/actions/workflows/ci.yml"><img src="https://github.com/zandenkane/blindspot/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <img src="https://img.shields.io/badge/python-3776AB?style=flat&logo=python&logoColor=white" alt="python">
+  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License">
+</p>
 
 you know that feeling where you study for 6 hours and then the exam has an entire section on something you didn't even know was a topic? cool, this fixes that.
 
