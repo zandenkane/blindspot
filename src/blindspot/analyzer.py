@@ -68,6 +68,7 @@ def _best_match_score(
     """Find the highest similarity score between a concept and user concepts.
 
     Uses spaCy word vectors for fuzzy matching.
+    """
     if not user_concepts:
         return 0.0
 
@@ -124,6 +125,7 @@ def analyze(
 
     Returns:
         AnalysisResult with coverage, gaps, and suggested study order.
+    """
     if nlp is None:
         import spacy as sp
         nlp = sp.load("en_core_web_md")

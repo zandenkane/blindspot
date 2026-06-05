@@ -100,6 +100,7 @@ def export_cmd(topic: str, input_path: str | None, output_path: str | None, thre
 
     Same analysis as 'analyze' but outputs structured JSON instead of a
     formatted report. Useful for piping into other tools or dashboards.
+    """
     if input_path:
         text = Path(input_path).read_text(encoding="utf-8")
     else:
@@ -179,6 +180,7 @@ def reference_info(name: str) -> None:
     """Show summary statistics for a reference graph.
 
     Displays node count, edge count, tier breakdown, and connectivity info.
+    """
     try:
         graph = load_reference(name)
     except Exception as e:

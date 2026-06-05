@@ -58,35 +58,4 @@ def _extract_svo_triples(doc: Doc) -> list[tuple[str, str, str]]:
 
 
 def extract_concepts(text: str, nlp: spacy.language.Language | None = None) -> nx.DiGraph:
-    """Parse text and build a concept graph.
-
-    Nodes are normalized concepts extracted from noun chunks.
-    Edges represent relationships found via dependency parsing (SVO triples).
-
-    Args:
-        text: Plain text describing what the user knows about a topic.
-        nlp: Optional pre-loaded spaCy model. Loads en_core_web_md if not provided.
-
-    Returns:
-        A networkx DiGraph with concept nodes and relationship edges.
-    if nlp is None:
-        nlp = _load_model()
-
-    doc = nlp(text)
-
-    graph = nx.DiGraph()
-
-    # Add noun chunks as nodes
-    concepts = _extract_noun_chunks(doc)
-    for concept in concepts:
-        graph.add_node(concept, source="noun_chunk")
-
-    # Add SVO triples as edges (and ensure nodes exist)
-    triples = _extract_svo_triples(doc)
-    for subj, verb, obj in triples:
-        if subj != obj:  # Skip self-loops
-            graph.add_node(subj, source="svo")
-            graph.add_node(obj, source="svo")
-            graph.add_edge(subj, obj, relation=verb)
-
-    return graph
+    """Parse text and build a concept graph. Nodes are normalized concepts extracted from noun chunks. Edges represent relationships found via dependency parsing (SVO triples). Args: text: Plain text describing what the user knows about a topic. nlp: Optional pre-loaded spaCy model. Loads en_core_web_md if not provided. Returns: A networkx DiGraph with concept nodes and relationship edges. if nlp is None: nlp = _load_model() doc = nlp(text) graph = nx.DiGraph() # Add noun chunks as nodes concepts = _extract_noun_chunks(doc) for concept in concepts: graph.add_node(concept, source="noun_chunk") # Add SVO triples as edges (and ensure nodes exist) triples = _extract_svo_triples(doc) for subj, verb, obj in triples: if subj != obj:  # Skip self-loops graph.add_node(subj, source="svo") graph.add_node(obj, source="svo") graph.add_edge(subj, obj, relation=verb) return graph"""

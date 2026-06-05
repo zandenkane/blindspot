@@ -13,6 +13,7 @@ REFERENCES_DIR = Path(__file__).parent / "references"
 
 
 class ReferenceError(Exception):
+    pass
 
 
 def _validate_schema(data: dict[str, Any]) -> list[str]:
@@ -105,6 +106,7 @@ def list_references(search_dir: Path | None = None) -> list[str]:
 
     Returns:
         Sorted list of reference names (without .json extension).
+    """
     directory = search_dir or REFERENCES_DIR
     if not directory.exists():
         return []
