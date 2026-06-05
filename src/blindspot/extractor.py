@@ -7,7 +7,6 @@ Falls back to simple regex/keyword matching when spaCy is not installed.
 from __future__ import annotations
 
 import re
-import string
 
 import networkx as nx
 
