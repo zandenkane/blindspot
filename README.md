@@ -2,9 +2,9 @@
 
 ![CI](https://github.com/zandenkane/blindspot/actions/workflows/ci.yml/badge.svg)
 
-So here's the thing. I kept bombing exams. Not because I was lazy (okay, sometimes), but because I'd study for hours and still miss entire topics I didn't even realize existed. I'd walk out of a bio test thinking "wait, there was a whole section on the cell cycle? I thought I knew cell biology."
+you know that feeling where you study for 6 hours and then the exam has an entire section on something you didn't even know was a topic? cool, this fixes that.
 
-Turns out I had blind spots. Shocking, I know.
+write what you know about a subject, blindspot compares it against a reference concept graph, and tells you exactly what you missed. turns out knowing 80% of something feels like knowing 100% of it until someone asks about the other 20%.
 
 blindspot is the tool I wish I had back then. You write down everything you know about a topic in plain text, and it tells you what you missed. It uses spaCy to parse your writing into concepts and relationships, compares them against a reference graph, and gives you a brutally honest report of what's not there.
 
