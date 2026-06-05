@@ -24,7 +24,6 @@ classifiers = [
     "Topic :: Education",
 ]
 dependencies = [
-    "spacy>=3.5,<4.0",
     "networkx>=3.0",
     "click>=8.0",
     "flask>=2.3",
@@ -32,6 +31,9 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
+nlp = [
+    "spacy>=3.5,<4.0",
+]
 dev = [
     "pytest>=7.0",
     "ruff>=0.4",

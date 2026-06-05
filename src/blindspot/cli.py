@@ -53,8 +53,11 @@ def analyze_cmd(topic: str, input_path: str | None, threshold: float) -> None:
         raise SystemExit(1)
 
     # Load model and reference
-    click.echo("Loading NLP model...")
     nlp = _load_model()
+    if nlp is not None:
+        click.echo("Using spaCy NLP model for extraction...")
+    else:
+        click.echo("spaCy not available; using keyword matching...")
 
     click.echo(f"Loading reference graph for '{topic}'...")
     try:
@@ -113,6 +116,10 @@ def export_cmd(topic: str, input_path: str | None, output_path: str | None, thre
         raise SystemExit(1)
 
     nlp = _load_model()
+    if nlp is not None:
+        click.echo("Using spaCy NLP model for extraction...", err=True)
+    else:
+        click.echo("spaCy not available; using keyword matching...", err=True)
 
     try:
         ref_graph = load_reference(topic)

@@ -43,7 +43,7 @@ def create_app() -> Flask:
                 error=str(e),
             )
 
-        nlp = _load_model()
+        nlp = _load_model()  # Returns None when spaCy unavailable
         user_graph = extract_concepts(text, nlp=nlp)
         result = analyze(
             user_graph, ref_graph, nlp=nlp,

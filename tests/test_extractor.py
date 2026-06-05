@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 import networkx as nx
 
-from blindspot.extractor import extract_concepts, _normalize
+from blindspot.extractor import extract_concepts, _normalize, _SPACY_AVAILABLE
 
 
 class TestNormalize:
@@ -19,15 +19,45 @@ class TestNormalize:
         assert _normalize("") == ""
 
 
-@pytest.mark.skipif(
-    True,  # these tests require spaCy en_core_web_md model
-    reason="spaCy model not available in CI"
-)
-class TestExtractConcepts:
-    """Tests that run against a real spaCy model.
+class TestExtractConceptsFallback:
+    """Tests for the regex/keyword fallback (no spaCy needed)."""
 
-    These are marked slow because loading en_core_web_md takes a few seconds.
-    """
+    def test_returns_digraph(self):
+        graph = extract_concepts("Python uses variables to store data.", nlp=None)
+        assert isinstance(graph, nx.DiGraph)
+
+    def test_finds_concepts_in_text(self):
+        text = "Variables store values. Functions accept parameters and return results."
+        graph = extract_concepts(text, nlp=None)
+        nodes = set(graph.nodes())
+        assert len(nodes) > 0
+        assert "variables" in nodes
+        assert "functions" in nodes
+
+    def test_empty_text_returns_empty_graph(self):
+        graph = extract_concepts("", nlp=None)
+        assert len(graph.nodes()) == 0
+
+    def test_concepts_are_lowercase(self):
+        text = "Python Variables and Data Types are fundamental concepts."
+        graph = extract_concepts(text, nlp=None)
+        for node in graph.nodes():
+            assert node == node.lower(), f"Node not lowercase: {node}"
+
+    def test_bigrams_extracted(self):
+        text = "for loops and while loops are important"
+        graph = extract_concepts(text, nlp=None)
+        nodes = set(graph.nodes())
+        assert "for loops" in nodes
+        assert "while loops" in nodes
+
+
+@pytest.mark.skipif(
+    not _SPACY_AVAILABLE,
+    reason="spaCy not installed"
+)
+class TestExtractConceptsSpacy:
+    """Tests that run against a real spaCy model."""
 
     @pytest.fixture(scope="module")
     def nlp(self):
@@ -45,7 +75,6 @@ class TestExtractConcepts:
         text = "Variables store values. Functions accept parameters and return results."
         graph = extract_concepts(text, nlp=nlp)
         nodes = set(graph.nodes())
-        # Should find at least some of these concepts
         assert len(nodes) > 0
 
     def test_empty_text_returns_empty_graph(self, nlp):
@@ -55,8 +84,6 @@ class TestExtractConcepts:
     def test_finds_relationships(self, nlp):
         text = "Python uses variables to store integers and strings."
         graph = extract_concepts(text, nlp=nlp)
-        # Should have at least one edge if SVO extraction works
-        # The exact edges depend on spaCy's parse, so we just check structure
         assert isinstance(graph, nx.DiGraph)
 
     def test_no_self_loops(self, nlp):

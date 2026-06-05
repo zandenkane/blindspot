@@ -5,7 +5,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 
 import networkx as nx
-import spacy
+
+try:
+    import spacy
+    _SPACY_AVAILABLE = True
+except ImportError:
+    spacy = None  # type: ignore[assignment]
+    _SPACY_AVAILABLE = False
 
 
 @dataclass
@@ -63,7 +69,7 @@ class AnalysisResult:
 def _best_match_score(
     concept: str,
     user_concepts: list[str],
-    nlp: spacy.language.Language,
+    nlp: object,
 ) -> float:
     """Find the highest similarity score between a concept and user concepts.
 
@@ -112,23 +118,25 @@ def _compute_severity(
 def analyze(
     user_graph: nx.DiGraph,
     ref_graph: nx.DiGraph,
-    nlp: spacy.language.Language | None = None,
+    nlp: object | None = None,
     similarity_threshold: float = 0.75,
 ) -> AnalysisResult:
     """Compare a user's extracted concept graph against a reference graph.
 
+    When *nlp* is provided (a loaded spaCy model), uses word-vector
+    similarity for fuzzy concept matching.  When *nlp* is None, falls
+    back to exact string matching only.
+
     Args:
         user_graph: Graph of concepts extracted from user's text.
         ref_graph: Reference graph defining the complete topic.
-        nlp: Pre-loaded spaCy model for similarity. Loads en_core_web_md if None.
+        nlp: Pre-loaded spaCy model for similarity. Uses exact match if None.
         similarity_threshold: Minimum similarity score to count as a match (0-1).
 
     Returns:
         AnalysisResult with coverage, gaps, and suggested study order.
     """
-    if nlp is None:
-        import spacy as sp
-        nlp = sp.load("en_core_web_md")
+    use_spacy = nlp is not None
 
     user_concepts = list(user_graph.nodes())
     ref_concepts = list(ref_graph.nodes())
@@ -148,16 +156,21 @@ def analyze(
     missing: list[str] = []
     max_out = max((ref_graph.out_degree(n) for n in ref_concepts), default=0)
 
+    user_concepts_set = set(user_concepts)
+
     for concept in ref_concepts:
         # Exact match first
-        if concept in user_concepts:
+        if concept in user_concepts_set:
             matched.append(concept)
             continue
 
-        # Fuzzy match via word vectors
-        score = _best_match_score(concept, user_concepts, nlp)
-        if score >= similarity_threshold:
-            matched.append(concept)
+        if use_spacy:
+            # Fuzzy match via word vectors
+            score = _best_match_score(concept, user_concepts, nlp)
+            if score >= similarity_threshold:
+                matched.append(concept)
+            else:
+                missing.append(concept)
         else:
             missing.append(concept)
 
@@ -183,7 +196,7 @@ def analyze(
             has_connection = False
             if user_graph.has_edge(src, dst) or user_graph.has_edge(dst, src):
                 has_connection = True
-            else:
+            elif use_spacy:
                 # Check fuzzy matches in user edges
                 for u_src, u_dst in user_graph.edges():
                     src_doc = nlp(src)

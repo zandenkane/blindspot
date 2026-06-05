@@ -39,7 +39,8 @@
     {"id": "list comprehensions", "tier": 2},
     {"id": "lambda functions", "tier": 3},
     {"id": "decorators", "tier": 3},
-    {"id": "generators", "tier": 3}
+    {"id": "generators", "tier": 3},
+    {"id": "closures", "tier": 3}
   ],
   "edges": [
     {"from": "variables", "to": "data types", "relation": "prerequisite"},
@@ -84,6 +85,8 @@
     {"from": "functions", "to": "decorators", "relation": "prerequisite"},
     {"from": "functions", "to": "generators", "relation": "prerequisite"},
     {"from": "loops", "to": "generators", "relation": "prerequisite"},
+    {"from": "functions", "to": "closures", "relation": "prerequisite"},
+    {"from": "scope", "to": "closures", "relation": "prerequisite"},
     {"from": "file handling", "to": "exceptions", "relation": "related-to"}
   ]
 }
