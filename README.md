@@ -24,6 +24,12 @@ blindspot is the tool I wish I had back then. You write down everything you know
 It is not magic. It is pattern matching with extra steps. But it works better than staring at your notes and hoping you covered everything.
 
 
+
+<p align="center">
+  <img src="assets/concept_graph.png" alt="concept graph with gaps highlighted" width="90%">
+</p>
+
+
 ## example
 
 ```
