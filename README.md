@@ -17,6 +17,40 @@ blindspot is the tool I wish I had back then. You write down everything you know
 
 It is not magic. It is pattern matching with extra steps. But it works better than staring at your notes and hoping you covered everything.
 
+
+## example
+
+```
+$ blindspot check --topic python-basics --input my_notes.txt
+
+scanning your notes...
+found 14 concepts you covered:
+  variables, functions, loops, conditionals, lists, dicts,
+  strings, f-strings, imports, classes, inheritance, exceptions,
+  list comprehensions, generators
+
+missing 6 concepts from the reference graph:
+  [!] decorators          (depends on: functions, closures)
+  [!] context managers    (depends on: classes, exceptions)
+  [!] closures            (depends on: functions, scope)
+  [!] scope/LEGB          (depends on: variables, functions)
+  [!] iterators           (depends on: classes, loops)
+  [!] magic methods       (depends on: classes)
+
+coverage: 70% (14/20)
+biggest gap cluster: closures -> decorators -> context managers
+```
+
+```mermaid
+graph TD
+    A[Your notes as text] --> B[Concept extractor]
+    B --> C[Your concept set]
+    D[Reference graph JSON] --> E[Required concept set]
+    C --> F{Compare}
+    E --> F
+    F --> G[Missing concepts + dependency chains]
+```
+
 ## Install
 
 ```bash
