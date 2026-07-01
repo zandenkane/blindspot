@@ -28,12 +28,10 @@ dependencies = [
     "click>=8.0",
     "flask>=2.3",
     "pyvis>=0.3",
+    "spacy>=3.5,<4.0",
 ]
 
 [project.optional-dependencies]
-nlp = [
-    "spacy>=3.5,<4.0",
-]
 dev = [
     "pytest>=7.0",
     "ruff>=0.4",
